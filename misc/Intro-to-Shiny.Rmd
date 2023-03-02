@@ -15,6 +15,8 @@ author: Ezra Morrison (<demorrison@ucdavis.edu>)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+(code for this app: https://raw.githubusercontent.com/d-morrison/shiny.demos/main/misc/Intro-to-Shiny.Rmd)
+
 # Shiny in RMarkdown
 
 We can create Shiny apps directly from .Rmd files; just add `runtime: shiny` to the header, e.g.,
@@ -285,17 +287,59 @@ server <- function(input, output) {
 
 # Dashboards
 
-There are lots of frameworks for building dashboards; one of the simplest works directly in Rmarkdown. Here's an example (taken from <https://bookdown.org/yihui/rmarkdown/shiny.html#a-shiny-dashboard-example>):
-
-``` markdown
-`r xfun::file_string('https://raw.githubusercontent.com/rstudio/rmarkdown-book/main/examples/dashboard/07-shiny.Rmd')`
-```
+There are lots of frameworks for building dashboards; one of the simplest works directly in Rmarkdown. Here's an example: https://raw.githubusercontent.com/rstudio/rmarkdown-book/main/examples/dashboard/07-shiny.Rmd
 
 # Your turn!
 
-Let's try it! Modify the following code (from the linear regression class) into an rmarkdown file with shiny buttons for `n`, `intercept` and `slope`.
+Let's try it! Modify the code from the linear regression class into an rmarkdown file with shiny buttons for `n`, `intercept` and `slope`.
 
-# Share your apps online!
+```r
+#live coding for mpm 207, linear regression
+
+library(ggplot2)
+
+# Set the number of observations
+n <- 100
+
+# Set the true intercept and slope
+intercept <- 2
+slope <- 3
+
+# Simulate predictor variable
+x <- rnorm(n, mean = 3)
+
+# Simulate response variable
+error <- rnorm(n, mean = 0, sd = 2)
+y <- intercept + slope * x + error
+
+# Create a data frame of x and y
+dsim <- data.frame(x, y)
+
+# Plot the simulated data using ggplot2
+ggplot(dsim, aes(x = x, y = y)) +
+  geom_point() +
+  labs(title = "Simulated Data for Linear Model", x = "Predictor Variable (X)", y = "Response Variable (Y)")
+
+# Fit a linear model to the simulated data
+model <- lm(y ~ x)
+
+# Print the model coefficients
+summary(model)
+
+
+# Plot the simulated data and the fitted line using ggplot2 
+ggplot(dsim, aes(x = x, y = y)) +
+  geom_point(alpha = .5) +
+  labs(title = "Simulated Data for Linear Model", x = "Predictor Variable (X)", y = "Response Variable (Y)") +
+  geom_abline(intercept = coef(model)[1], slope = coef(model)[2])  + 
+  theme_bw()
+
+```
+
+(Example solution: https://ezra-morrison.shinyapps.io/linear-regression/)
+(Example source code: https://raw.githubusercontent.com/d-morrison/shiny.demos/main/vignettes/linear-regression.Rmd)
+
+# Share your apps online
 
 In RStudio: File \> Publish; follow instructions to create a shinyapps.io account.
 
