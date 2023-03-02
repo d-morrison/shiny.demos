@@ -340,6 +340,7 @@ ggplot(dsim, aes(x = x, y = y)) +
 ```
 
 (Example solution: https://ezra-morrison.shinyapps.io/linear-regression/)
+
 (Example source code: https://raw.githubusercontent.com/d-morrison/shiny.demos/main/vignettes/linear-regression.Rmd)
 
 # Share your apps online
