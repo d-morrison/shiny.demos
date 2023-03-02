@@ -15,6 +15,8 @@ author: Ezra Morrison (<demorrison@ucdavis.edu>)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+(deployed app: https://ezra-morrison.shinyapps.io/Intro-to-Shiny)
+
 (code for this app: https://raw.githubusercontent.com/d-morrison/shiny.demos/main/misc/Intro-to-Shiny.Rmd)
 
 # Shiny in RMarkdown
