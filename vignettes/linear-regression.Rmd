@@ -1,6 +1,7 @@
 ---
 title: "Linear Regression"
-output: rmarkdown::html_vignette
+output: html_document
+runtime: shiny
 vignette: >
   %\VignetteIndexEntry{Linear Regression}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,46 +18,62 @@ knitr::opts_chunk$set(
 ```{r setup}
 
 library(ggplot2)
-
-
+library(shiny)
+library(plotly)
 ## PART 1
 
 # Set the number of observations
-n <- 100
+# n <- 100
 
+sliderInput("n", "# of observations", value = 100, min = 2, max = 1000, step = 1)
+
+```
+
+```{r}
 # Set the true intercept and slope
-intercept <- 2
-slope <- 3
+# intercept <- 2
+
+numericInput("intercept", "Intercept", value = 2)
+
+# slope <- 3
+
+numericInput("slope", "Slope", value = 3)
 
 # Simulate predictor variable
-x <- rnorm(n, mean = 3)
+x <- rnorm(input$n, mean = 3) |> reactive()
 
 # Simulate response variable
-error <- rnorm(n, mean = 0, sd = 2)
-y <- intercept + slope * x + error
+error <- rnorm(input$n, mean = 0, sd = 2) |> reactive()
+y <- reactive(input$intercept + input$slope * x() + error())
 
 # Create a data frame of x and y
-dsim <- data.frame(x, y)
+dsim <- data.frame(x(), y()) |> reactive()
 
 # Plot the simulated data using ggplot2
-ggplot(dsim, aes(x = x, y = y)) +
-  geom_point() +
-  labs(title = "Simulated Data for Linear Model", x = "Predictor Variable (X)", y = "Response Variable (Y)")
+plot1 = 
+  reactive(
+    ggplot(dsim(), aes(x = x, y = y)) +
+      geom_point() +
+      labs(title = "Simulated Data for Linear Model", x = "Predictor Variable (X)", y = "Response Variable (Y)"))
+
+plot1() |> ggplotly() |> renderPlotly()
 
 # Fit a linear model to the simulated data
-model <- lm(y ~ x)
+model <- lm(y() ~ x()) |> reactive()
 
 # Print the model coefficients
-summary(model)
+summary(model()) |> renderPrint()
 
 
 # Plot the simulated data and the fitted line using ggplot2 
-ggplot(dsim, aes(x = x, y = y)) +
-  geom_point(alpha = .5) +
-  labs(title = "Simulated Data for Linear Model", x = "Predictor Variable (X)", y = "Response Variable (Y)") +
-  geom_abline(intercept = coef(model)[1], slope = coef(model)[2])  + 
-  theme_bw()
+plot2 = reactive(
+  ggplot(dsim, aes(x = x, y = y)) +
+    geom_point(alpha = .5) +
+    labs(title = "Simulated Data for Linear Model", x = "Predictor Variable (X)", y = "Response Variable (Y)") +
+    geom_abline(intercept = coef(model)[1], slope = coef(model)[2])  + 
+    theme_bw())
 
+plot2() |> ggplotly2() |> renderPlotly()
 
 
 ```
