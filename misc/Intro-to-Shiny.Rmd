@@ -1,0 +1,279 @@
+---
+title: "Intro to Shiny apps"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 4
+    number_sections: true
+date: "2023-03-02"
+runtime: shiny
+author: Ezra Morrison (<demorrison@ucdavis.edu>)
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Shiny in RMarkdown
+
+We can create Shiny apps directly from .Rmd files; just add `runtime: shiny` to the header, e.g.,
+
+```
+---
+title: "Shiny in RMarkdown"
+output: html_document
+date: "2023-02-27"
+runtime: shiny
+---
+```
+
+Then we can add shiny input widgets and use their values to inform our analyses:
+
+```{r pressure, echo=TRUE}
+library(shiny)
+
+sliderInput(
+  inputId = "bins", 
+  label = "how many bins?", 
+  min = 1, 
+  max = 50, 
+  val = 10)
+
+renderPlot( # this wrapper tells Shiny to update the histogram in response to user actions
+  hist(iris$Sepal.Length, breaks = input$bins)) # We reference the values of Shiny inputs with the prefix `input$`
+
+```
+
+# UI-server structure
+
+We can build more complex shiny apps using a server and UI structure. Copy-paste the following code block into the R console and you'll get a basic app: 
+
+```r
+
+library(shiny)
+
+# next two lines optional, for debugging:
+library("reactlog")
+reactlog_enable()
+# if you include these lines, you can press control-F3 (windows) or command-F3 (mac) while app is running to get an interactive graph of your app's internal structure
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+
+    # Application title
+    titlePanel("Old Faithful Geyser Data"),
+
+    # Sidebar with a slider input for number of bins 
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput(
+            inputId = "bins",
+            label = "Number of bins:",
+            min = 1,
+            max = 50,
+            value = 30)
+        ),
+
+        # Show a plot of the generated distribution
+        mainPanel(
+           plotOutput("distPlot")
+        )
+    )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+
+    output$distPlot <- renderPlot({
+        # generate bins based on input$bins from ui.R
+        x    <- faithful[, 2]
+        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+
+        # draw the histogram with the specified number of bins
+        hist(x, breaks = bins, col = 'darkgray', border = 'white',
+             xlab = 'Waiting time to next eruption (in mins)',
+             main = 'Histogram of waiting times')
+    })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+
+```
+
+# Some examples
+
+Using this structure, you can build complex dashboards with multiple pages and substantial computations in response to users' inputs:
+
+https://agent-based-models.shinyapps.io/RegionalCOVIDSchoolSimulation/ (code: https://github.com/UCLA-PHP/school.epi.abm)
+
+A particularly useful application is presenting interactive versions of paper figures and tables:
+
+https://morrison.shinyapps.io/VaxEffApp/ (code: https://github.com/d-morrison/vax.eff)
+
+Some more projects with public code:
+
+https://ctsipopulationhealth.shinyapps.io/FluView/ (code: https://github.com/UCLA-PHP/FluView)
+
+https://ctsipopulationhealth.shinyapps.io/wastewater/ (code: https://github.com/UCLA-PHP/wastewater)
+
+# Interactive graphics with `plotly`
+
+Use the `plotly` package to create interactive graphics; to start,  call `plotly::ggplotly()` on `ggplot2` graphs.
+
+```{r}
+library(ggplot2)
+library(plotly)
+library(maps)
+data(canada.cities, package = "maps")
+
+# create a graph in ggplot2:
+viz <- ggplot(canada.cities, aes(long, lat)) +
+  borders(regions = "canada") +
+  coord_equal() +
+  geom_point(aes(
+    text = name, 
+    size = pop), colour = "red", alpha = 1/2)
+
+# convert to interactive via plotly:
+plotly::ggplotly(viz)
+
+```
+
+You can pan, zoom, stretch and compress!
+
+# Some key functions
+
+## UI-side functions
+
+### Input widgets
+
+#### `sliderInput()`
+
+Produces a slider:
+
+```{r}
+sliderInput(
+  inputId = "slider", 
+  label = "Text to go next to button",
+  min = 0,
+  max = 10,
+  value = 5)
+
+renderText(input$slider)
+```
+
+#### `numericInput()`
+
+Produces a text box to input a number:
+
+```{r}
+numericInput(
+  inputId = "how-I-want-to-refer-to-this-input-in-computations",
+  label = "Give me a number!",
+  min = -1,
+  max = 4,
+  value = 3.1415,
+  step = 0.0001
+  
+)
+renderText(input$"how-I-want-to-refer-to-this-input-in-computations")
+```
+
+#### `selectInput()`
+
+Select from a list of options:
+
+```{r}
+
+selectInput("state", "What's your favourite state?", state.name)
+renderText(input$state)
+```
+
+#### `radioButtons()`
+
+```{r}
+animals <- c("dog", "cat", "mouse", "bird", "other")
+radioButtons(inputId = "animal", label = "What's your favourite animal?", animals)
+renderText(input$animal)
+```
+
+#### `textInput()`
+
+Free-text entry:
+
+```{r}
+textInput(inputId = "fav_color", label = "What's your favorite color?")
+renderText(input$fav_color)
+```
+
+### Outputs
+
+#### `renderTable()`/`tableOutput()`
+
+```{r}
+numericInput("nrows", "How many rows?", min = 1, max = nrow(iris), step = 1, value = 5)
+renderTable(iris[1:input$nrows, ])
+```
+
+In UI-server apps, pair with an `Output()` function:
+
+```r
+# in server:
+output$table1 = renderTable(iris[1:5, ])
+
+# in UI:
+tableOutput("table1")
+
+```
+
+#### `renderPlot()`/`plotOutput()`
+
+```{r}
+
+numericInput("maxnum", "How many points?", min = 1, step = 1, value = 5)
+renderPlot(plot(1:input$maxnum))
+```
+
+(same deal with `plotOutput()` in UI)
+
+## Other server-side functions
+
+### `reactive()`
+
+Creates an intermediate variable that sits between inputs and outputs; to avoid code duplication, avoid repeated computations, and improve readability. For example, if we want to display the histogram in the previous example twice, we could rewrite the `server` function above as follows:
+
+```r
+server <- function(input, output) {
+
+    graph1 = reactive({
+        # generate bins based on input$bins from ui.R
+        x    <- faithful[, 2]
+        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+
+        # draw the histogram with the specified number of bins
+        hist(x, breaks = bins, col = 'darkgray', border = 'white',
+             xlab = 'Waiting time to next eruption (in mins)',
+             main = 'Histogram of waiting times')
+    })
+
+    output$distPlot <- renderPlot(graph1()) # note that reactive variables get used like functions, with parentheses at the end.
+    
+    output$Plot2 <- renderPlot(graph1()) # here we pass graph1() to a different output variable, to be used somewhere else in the UI.
+}
+
+```
+
+# Your turn!
+
+Let's try it! Modify a markdown file to make it interactive; pick any input that you weren't sure about, make an input widget for it, and wrap the outputs with `render` functions.
+
+# Share your apps online!
+
+In RStudio: File > Publish
+
+# Key references
+
+https://mastering-shiny.org/ (Hadley Wickham, also leads ggplot2, tidyverse)
+
+https://engineering-shiny.org/index.html (advanced shiny app engineering)
