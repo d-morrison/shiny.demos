@@ -33,7 +33,6 @@ We can create Shiny apps directly from .Rmd files; just add `runtime: shiny` to 
 Then we can add shiny input widgets and use their values to inform our analyses:
 
 ```{r pressure, echo=TRUE}
-library(shiny)
 
 sliderInput(
   inputId = "bins", 
