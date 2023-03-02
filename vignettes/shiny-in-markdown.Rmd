@@ -5,7 +5,7 @@ vignette: >
   %\VignetteIndexEntry{Shiny in RMarkdown}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  
+runtime: shiny2
 ---
 
 ```{r, include = FALSE}
@@ -16,7 +16,9 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(shiny.demos)
+library(shiny)
+numericInput("number1", "pick a number", value = 1)
+renderText(input$number1)
 ```
 
 

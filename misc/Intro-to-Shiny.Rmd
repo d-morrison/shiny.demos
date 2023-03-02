@@ -227,7 +227,19 @@ tableOutput("table1")
 
 ```
 
+#### `DT::renderTableTable()` and `DT::dataTableOutput()`
+
+Produces tables with interactive buttons built-in (with lots of customization options):
+
+```{r}
+library(DT)
+DT::renderDataTable(iris)
+```
+
+
 #### `renderPlot()`/`plotOutput()`
+
+Use with `base` graphics and `ggplot2` graphics:
 
 ```{r}
 
@@ -242,9 +254,13 @@ renderPlot(plot(1:input$maxnum))
 
 Analog for `plotly` plot objects.
 
+#### `renderText()` & `textOutput()`
+
+Display strings as text with the same font as the rest of your markdown document/shiny app.
+
 ####  `renderPrint()` & `verbatimTextOutput()`
 
-Display output with fixed-width characters (like R console output)
+Display output in a fixed-width character font (like R console output)
 
 ## Other server-side functions
 

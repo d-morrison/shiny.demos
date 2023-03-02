@@ -13,5 +13,6 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-URL: https://github.com/d-morrison/shiny.demos
+URL: https://github.com/d-morrison/shiny.demos,
+    https://d-morrison.github.io/shiny.demos/
 BugReports: https://github.com/d-morrison/shiny.demos/issues
