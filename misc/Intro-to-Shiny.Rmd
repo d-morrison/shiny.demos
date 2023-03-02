@@ -293,11 +293,11 @@ There are lots of frameworks for building dashboards; one of the simplest works 
 
 # Your turn!
 
-Let's try it! Modify a markdown file to make it interactive; pick any input that you weren't sure about, make an input widget for it, and wrap the outputs with `render` functions.
+Let's try it! Modify the following code (from the linear regression class) into an rmarkdown file with shiny buttons for `n`, `intercept` and `slope`.
 
 # Share your apps online!
 
-In RStudio: File \> Publish
+In RStudio: File \> Publish; follow instructions to create a shinyapps.io account.
 
 # Key references
 
