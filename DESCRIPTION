@@ -10,10 +10,17 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Suggests: 
+    datasets,
+    DT,
     flexdashboard,
+    ggplot2,
     knitr,
+    maps,
+    plotly,
     rmarkdown
 VignetteBuilder: knitr
 URL: https://github.com/d-morrison/shiny.demos,
     https://d-morrison.github.io/shiny.demos/
 BugReports: https://github.com/d-morrison/shiny.demos/issues
+Imports: 
+    reactlog
