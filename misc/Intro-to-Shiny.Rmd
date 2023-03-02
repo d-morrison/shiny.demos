@@ -121,6 +121,7 @@ Some more projects with public code:
 
 Use the `plotly` package to create interactive graphics; to start, call `plotly::ggplotly()` on `ggplot2` graphs.
 
+(note: the code in this section doesn't have any shiny elements; it would also work in a normal Rmarkdown file or in the R interactive console).
 ```{r}
 library(ggplot2)
 library(plotly)
