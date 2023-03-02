@@ -4,6 +4,7 @@ output:
   html_document:
     toc: true
     toc_depth: 4
+    toc_float: true
     number_sections: true
 date: "2023-03-02"
 runtime: shiny
@@ -18,14 +19,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 We can create Shiny apps directly from .Rmd files; just add `runtime: shiny` to the header, e.g.,
 
-```
----
-title: "Shiny in RMarkdown"
-output: html_document
-date: "2023-02-27"
-runtime: shiny
----
-```
+    ---
+    title: "Shiny in RMarkdown"
+    output: html_document
+    date: "2023-02-27"
+    runtime: shiny
+    ---
 
 Then we can add shiny input widgets and use their values to inform our analyses:
 
@@ -46,9 +45,9 @@ renderPlot( # this wrapper tells Shiny to update the histogram in response to us
 
 # UI-server structure
 
-We can build more complex shiny apps using a server and UI structure. Copy-paste the following code block into the R console and you'll get a basic app: 
+We can build more complex shiny apps using a server and UI structure. Copy-paste the following code block into the R console and you'll get a basic app:
 
-```r
+``` r
 
 library(shiny)
 
@@ -98,28 +97,27 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-
 ```
 
 # Some examples
 
 Using this structure, you can build complex dashboards with multiple pages and substantial computations in response to users' inputs:
 
-https://agent-based-models.shinyapps.io/RegionalCOVIDSchoolSimulation/ (code: https://github.com/UCLA-PHP/school.epi.abm)
+<https://agent-based-models.shinyapps.io/RegionalCOVIDSchoolSimulation/> (code: <https://github.com/UCLA-PHP/school.epi.abm>)
 
 A particularly useful application is presenting interactive versions of paper figures and tables:
 
-https://morrison.shinyapps.io/VaxEffApp/ (code: https://github.com/d-morrison/vax.eff)
+<https://morrison.shinyapps.io/VaxEffApp/> (code: <https://github.com/d-morrison/vax.eff>)
 
 Some more projects with public code:
 
-https://ctsipopulationhealth.shinyapps.io/FluView/ (code: https://github.com/UCLA-PHP/FluView)
+<https://ctsipopulationhealth.shinyapps.io/FluView/> (code: <https://github.com/UCLA-PHP/FluView>)
 
-https://ctsipopulationhealth.shinyapps.io/wastewater/ (code: https://github.com/UCLA-PHP/wastewater)
+<https://ctsipopulationhealth.shinyapps.io/wastewater/> (code: <https://github.com/UCLA-PHP/wastewater>)
 
 # Interactive graphics with `plotly`
 
-Use the `plotly` package to create interactive graphics; to start,  call `plotly::ggplotly()` on `ggplot2` graphs.
+Use the `plotly` package to create interactive graphics; to start, call `plotly::ggplotly()` on `ggplot2` graphs.
 
 ```{r}
 library(ggplot2)
@@ -218,13 +216,12 @@ renderTable(iris[1:input$nrows, ])
 
 In UI-server apps, pair with an `Output()` function:
 
-```r
+``` r
 # in server:
 output$table1 = renderTable(iris[1:5, ])
 
 # in UI:
 tableOutput("table1")
-
 ```
 
 #### `DT::renderTableTable()` and `DT::dataTableOutput()`
@@ -235,7 +232,6 @@ Produces tables with interactive buttons built-in (with lots of customization op
 library(DT)
 DT::renderDataTable(iris)
 ```
-
 
 #### `renderPlot()`/`plotOutput()`
 
@@ -249,7 +245,6 @@ renderPlot(plot(1:input$maxnum))
 
 (same deal with `plotOutput()` in UI)
 
-
 #### `renderPlotly()` / `plotlyOutput()`
 
 Analog for `plotly` plot objects.
@@ -258,7 +253,7 @@ Analog for `plotly` plot objects.
 
 Display strings as text with the same font as the rest of your markdown document/shiny app.
 
-####  `renderPrint()` & `verbatimTextOutput()`
+#### `renderPrint()` & `verbatimTextOutput()`
 
 Display output in a fixed-width character font (like R console output)
 
@@ -268,7 +263,7 @@ Display output in a fixed-width character font (like R console output)
 
 Creates an intermediate variable that sits between inputs and outputs; to avoid code duplication, avoid repeated computations, and improve readability. For example, if we want to display the histogram in the previous example twice, we could rewrite the `server` function above as follows:
 
-```r
+``` r
 server <- function(input, output) {
 
     graph1 = reactive({
@@ -286,7 +281,14 @@ server <- function(input, output) {
     
     output$Plot2 <- renderPlot(graph1()) # here we pass graph1() to a different output variable, to be used somewhere else in the UI.
 }
+```
 
+# Dashboards
+
+There are lots of frameworks for building dashboards; one of the simplest works directly in Rmarkdown. Here's an example (taken from <https://bookdown.org/yihui/rmarkdown/shiny.html#a-shiny-dashboard-example>):
+
+``` markdown
+`r xfun::file_string('https://raw.githubusercontent.com/rstudio/rmarkdown-book/main/examples/dashboard/07-shiny.Rmd')`
 ```
 
 # Your turn!
@@ -295,10 +297,10 @@ Let's try it! Modify a markdown file to make it interactive; pick any input that
 
 # Share your apps online!
 
-In RStudio: File > Publish
+In RStudio: File \> Publish
 
 # Key references
 
-https://mastering-shiny.org/ (Hadley Wickham, also leads ggplot2, tidyverse)
+<https://mastering-shiny.org/> (Hadley Wickham, also leads ggplot2, tidyverse)
 
-https://engineering-shiny.org/index.html (advanced shiny app engineering)
+<https://engineering-shiny.org/index.html> (advanced shiny app engineering)

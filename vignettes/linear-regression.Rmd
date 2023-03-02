@@ -2,7 +2,6 @@
 title: "Linear Regression"
 output: 
   flexdashboard::flex_dashboard:
-    toc: true
     orientation: rows
   html_document:
     toc: true
@@ -50,8 +49,7 @@ numericInput("slope", "Slope", value = 3)
 
 ```
 
-Column
---------------------------------------------------
+##
 
 ### Raw data
 
@@ -92,7 +90,7 @@ plot1() |> ggplotly() |> renderPlotly()
 
 ```
 
-## Model
+##
 
 ### Model summary
 
