@@ -351,3 +351,5 @@ In RStudio: File \> Publish; follow instructions to create a shinyapps.io accoun
 <https://mastering-shiny.org/> (Hadley Wickham, also leads ggplot2, tidyverse)
 
 <https://engineering-shiny.org/index.html> (advanced shiny app engineering)
+
+<https://unleash-shiny.rinterface.com/> (Using HTML, CSS and JavaScript to customize Shiny apps)
